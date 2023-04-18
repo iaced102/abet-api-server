@@ -60,6 +60,10 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 		return forward(context, authObject, c.ReportController.CreateNewReport)
 	})
 
+	group.GET("/get-document/:documentId", func(context echo.Context) error {
+		return forward(context, authObject, c.ReportController.GetDetailDocument)
+	})
+
 	return e
 }
 func forward(context echo.Context, authObject aAuth.AuthObject, f func(*controller.Context) error) error {

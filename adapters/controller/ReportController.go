@@ -12,19 +12,26 @@ import (
 
 type reportController struct {
 	createReportService       rService.CreateReportService
+	getReportService          rService.GetReportService
+	getDetailReportService    service.GetDetailReportService
 	createDocumentService     dservice.CreateDocumentService
+	getDocumentService        dservice.GetDocumentService
 	createDetailReportService service.CreateDetailReportService
 }
 
 type ReportController interface {
 	CreateNewReport(c *Context) error
+	GetDetailDocument(c *Context) error
 }
 
-func NewReportController(cRS rService.CreateReportService, cDS dservice.CreateDocumentService, cDRS service.CreateDetailReportService) ReportController {
+func NewReportController(cRS rService.CreateReportService, cDS dservice.CreateDocumentService, cDRS service.CreateDetailReportService, gDS dservice.GetDocumentService, gRS rService.GetReportService, gDRS service.GetDetailReportService) ReportController {
 	return &reportController{
 		createReportService:       cRS,
+		getReportService:          gRS,
 		createDocumentService:     cDS,
+		getDocumentService:        gDS,
 		createDetailReportService: cDRS,
+		getDetailReportService:    gDRS,
 	}
 }
 
@@ -73,12 +80,39 @@ func (rC *reportController) CreateNewReport(c *Context) error {
 			return c.Output(http.StatusBadRequest, nil, err)
 		}
 		return c.Output(http.StatusCreated, nil, nil)
-		// for _,student := range DocumentConfig.ListStudent{
-
-		// }
 
 	} else {
+		report, e := rC.createReportService.CreateReport(DocumentConfig.DocumentId, DocumentConfig.EvaluateField, DocumentConfig.ListStudent)
+		if e != nil {
+			return c.Output(http.StatusBadRequest, nil, e)
+		}
+		err := rC.createDetailReportService.CreateListDetailReport(DocumentConfig.ListStudent, report.Id, report.Field)
+		if err != nil {
+			return c.Output(http.StatusBadRequest, nil, err)
+		}
+		return c.Output(http.StatusCreated, nil, nil)
 		// document :=
 	}
-	return nil
+}
+
+func (rC *reportController) GetDetailDocument(c *Context) error {
+	doc, e := rC.getDocumentService.GetDocument(c.Param("documentId"))
+	if e != nil {
+		return c.Output(http.StatusBadRequest, doc, e)
+	}
+	report, e := rC.getReportService.GetAllReport(doc.Id)
+	if e != nil {
+		return c.Output(http.StatusBadRequest, doc, e)
+	}
+	fmt.Println(report)
+	reportIds := []string{}
+	for _, r := range report {
+		reportIds = append(reportIds, r.Id)
+	}
+	result, e := rC.getDetailReportService.GetDetailReport(reportIds)
+	if e != nil {
+		return c.Output(http.StatusBadRequest, doc, e)
+	}
+
+	return c.Output(http.StatusOK, result, nil)
 }

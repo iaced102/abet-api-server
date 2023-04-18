@@ -5,6 +5,7 @@ type Report struct {
 	DocumentId string   `pg:"document_id"`
 	Field      string   `pg:"field"`
 	tableName  struct{} `pg:"report"`
+	IsTemplate int      `pg:"is_template"`
 }
 
 type DetailReport struct {

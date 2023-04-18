@@ -7,45 +7,45 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
   \connect $APP_DB_NAME $APP_DB_USER
   BEGIN;
     CREATE TABLE IF NOT EXISTS users (
-	  id CHAR(80) NOT NULL PRIMARY KEY,
-	  user_name CHAR(26) NOT NULL ,
+	  id varchar(80) NOT NULL PRIMARY KEY,
+	  user_name varchar(26) NOT NULL ,
 	  user_type INT,
-	  created_at CHAR(50),
-      updated_at CHAR(50),
-      password CHAR(200),
-      crypt_password CHAR(400),
+	  created_at varchar(50),
+      updated_at varchar(50),
+      password varchar(200),
+      crypt_password varchar(400),
 	  UNIQUE(id, user_name)
 	);
   CREATE TABLE IF NOT EXISTS document (
-	  id CHAR(80) NOT NULL PRIMARY KEY,
-    name CHAR(80),
-	  created_by CHAR(80) NOT NULL ,
-	  created_at CHAR(50),
-    updated_at CHAR(50),
-    assessor_id CHAR(150),
-    verifier_id CHAR(150),
-    superviser_id CHAR(80),
+	  id varchar(80) NOT NULL PRIMARY KEY,
+    name varchar(80),
+	  created_by varchar(80) NOT NULL ,
+	  created_at varchar(50),
+    updated_at varchar(50),
+    assessor_id varchar(150),
+    verifier_id varchar(150),
+    superviser_id varchar(80),
 	  UNIQUE(id)
 	);
   CREATE TABLE IF NOT EXISTS report (
-	  id CHAR(80) NOT NULL PRIMARY KEY,
-	  document_id CHAR(80),
-    field CHAR(20),
+	  id varchar(80) NOT NULL PRIMARY KEY,
+	  document_id varchar(80),
+    field varchar(20),
 	  UNIQUE(id)
 	);
   CREATE TABLE IF NOT EXISTS report (
-	  id CHAR(80) NOT NULL PRIMARY KEY,
-	  document_id CHAR(80),
-    field CHAR(20),
+	  id varchar(80) NOT NULL PRIMARY KEY,
+	  document_id varchar(80),
+    field varchar(20),
 	  UNIQUE(id)
 	);
   CREATE TABLE IF NOT EXISTS detail_report (
-	  id CHAR(80) NOT NULL PRIMARY KEY,
-	  student_id CHAR(25),
-    first_name CHAR(30),
-    last_name CHAR(30),
-    class_id CHAR(30),
-    report_id CHAR(80),
+	  id varchar(80) NOT NULL PRIMARY KEY,
+	  student_id varchar(25),
+    first_name varchar(30),
+    last_name varchar(30),
+    class_id varchar(30),
+    report_id varchar(80),
     value text,
     UNIQUE(id)
 	);

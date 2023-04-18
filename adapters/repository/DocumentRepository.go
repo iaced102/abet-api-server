@@ -7,6 +7,7 @@ type documentRepository struct {
 }
 type DocumentRepository interface {
 	CreateDocument(doc *model.Document) error
+	GetDocument(doc *model.Document) error
 }
 
 func NewDocumentRepository(db *Orm) DocumentRepository {
@@ -17,5 +18,10 @@ func NewDocumentRepository(db *Orm) DocumentRepository {
 
 func (dR *documentRepository) CreateDocument(doc *model.Document) error {
 	_, e := dR.db.pgdb.Model(doc).Insert()
+	return e
+}
+
+func (dR *documentRepository) GetDocument(doc *model.Document) error {
+	e := dR.db.pgdb.Model(doc).Where("id = ?", doc.Id).Select()
 	return e
 }

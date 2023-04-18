@@ -10,7 +10,6 @@ import (
 	aAuth "aBet/adapters/auth"
 	"aBet/adapters/controller"
 	"aBet/crypt"
-	"fmt"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -56,12 +55,16 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 		return forward(context, authObject, c.AuthController.DeleteUsers)
 	})
 
+	//__________________________________________________
+	group.POST("/create-report", func(context echo.Context) error {
+		return forward(context, authObject, c.ReportController.CreateNewReport)
+	})
+
 	return e
 }
 func forward(context echo.Context, authObject aAuth.AuthObject, f func(*controller.Context) error) error {
 	ct := &controller.Context{}
 	ct.Context = context
 	ct.AuthObject = authObject
-	fmt.Println(authObject)
 	return f(ct)
 }

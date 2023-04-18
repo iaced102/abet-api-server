@@ -5,7 +5,8 @@ import (
 )
 
 type AppController struct {
-	AuthController AuthController
+	AuthController   AuthController
+	ReportController ReportController
 }
 
 func (app *AppController) HelthCheck(e *Context) error {

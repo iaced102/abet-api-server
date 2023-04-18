@@ -16,5 +16,38 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
       crypt_password CHAR(400),
 	  UNIQUE(id, user_name)
 	);
+  CREATE TABLE IF NOT EXISTS document (
+	  id CHAR(80) NOT NULL PRIMARY KEY,
+    name CHAR(80),
+	  created_by CHAR(80) NOT NULL ,
+	  created_at CHAR(50),
+    updated_at CHAR(50),
+    assessor_id CHAR(150),
+    verifier_id CHAR(150),
+    superviser_id CHAR(80),
+	  UNIQUE(id)
+	);
+  CREATE TABLE IF NOT EXISTS report (
+	  id CHAR(80) NOT NULL PRIMARY KEY,
+	  document_id CHAR(80),
+    field CHAR(20),
+	  UNIQUE(id)
+	);
+  CREATE TABLE IF NOT EXISTS report (
+	  id CHAR(80) NOT NULL PRIMARY KEY,
+	  document_id CHAR(80),
+    field CHAR(20),
+	  UNIQUE(id)
+	);
+  CREATE TABLE IF NOT EXISTS detail_report (
+	  id CHAR(80) NOT NULL PRIMARY KEY,
+	  student_id CHAR(25),
+    first_name CHAR(30),
+    last_name CHAR(30),
+    class_id CHAR(30),
+    report_id CHAR(80),
+    value text,
+    UNIQUE(id)
+	);
   COMMIT;
 EOSQL

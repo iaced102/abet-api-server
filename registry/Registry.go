@@ -21,6 +21,7 @@ func NewRegistry(db *repository.Orm) Registry {
 
 func (r *registry) NewAppController() controller.AppController {
 	return controller.AppController{
-		AuthController: r.NewAuthController(),
+		AuthController:   r.NewAuthController(),
+		ReportController: r.NewReportController(),
 	}
 }

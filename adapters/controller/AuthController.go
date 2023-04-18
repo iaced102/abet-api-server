@@ -60,7 +60,7 @@ func DecryptPass(encryptPass string, filepath string) string {
 
 func GenerateToken(accountUser model.Users) (string, error) {
 	secret := crypt.GetPrivateKeyByte("crypt/public3.pem") //[]byte("mysecretkey")
-
+	fmt.Println(accountUser.Id, "iddddddddd")
 	// Create a new set of claims for the token
 	claims := &Claims{
 		Username: accountUser.UserName,
@@ -90,12 +90,13 @@ func (uC *authController) LoginUserAccount(c *Context) error {
 		return c.Output(http.StatusBadRequest, "User name not found", nil)
 	}
 	AccountParams.Password = library.HashStringSha256(AccountParams.Password)
+	fmt.Println(AccountParams, AccountParams.Id, "id loginnnnnnnnnnnnn")
 	usersInfo, e := uC.usersService.LoginUserAccount(AccountParams.UserName, AccountParams.Password)
 	if e != nil || usersInfo.Id == "" {
 		return c.Output(http.StatusBadRequest, "User name or password wrong", e)
 	}
 
-	token, errorToken := GenerateToken(AccountParams)
+	token, errorToken := GenerateToken(usersInfo)
 	if errorToken != nil {
 		return c.Output(http.StatusBadRequest, "RenderToken Gone wrong", e)
 	}
@@ -122,10 +123,7 @@ func (uC *authController) AddUsers(c *Context) error {
 	AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")
 
 	AccountParams.Password = library.HashStringSha256(AccountParams.Password)
-	fmt.Println(123)
-	// fmt.Println(1234)
 	us, e := uC.usersService.AddUsers(AccountParams)
-	// fmt.Println(12345)
 	if e != nil {
 		return c.Output(http.StatusBadRequest, "Create account fail", e)
 	}

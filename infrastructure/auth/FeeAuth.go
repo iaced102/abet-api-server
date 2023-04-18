@@ -33,14 +33,12 @@ type authObject struct {
 func NewAuthObject(data []byte, jwt string) (sAuth.AuthObject, error) {
 	var p fastjson.Parser
 	v, err := p.Parse(string(data))
-	fmt.Println(v)
 	if err != nil {
 		return nil, err
 	}
 	userId := string(v.GetStringBytes("id"))
-	userDisplayName := string(v.GetStringBytes("userName"))
+	userDisplayName := string(v.GetStringBytes("username"))
 	userType := string(v.GetStringBytes("role"))
-	fmt.Println(userId, userDisplayName, userType)
 	return &authObject{
 			id:       userId,
 			userName: userDisplayName,
@@ -51,6 +49,7 @@ func NewAuthObject(data []byte, jwt string) (sAuth.AuthObject, error) {
 }
 
 func (au *authObject) GetUserId() string {
+	fmt.Println(au, "auuuuuuuuuuuuuuuuuuu")
 	return au.id
 }
 func (au *authObject) GetUserDisplayName() string {

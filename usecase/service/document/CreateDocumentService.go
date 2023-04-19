@@ -7,7 +7,7 @@ import (
 )
 
 type CreateDocumentService interface {
-	CreateDocument(userId string, name string, assessorId []string, verifierId []string, superviserId string) (model.Document, error)
+	CreateDocument(userId string, name string, EvaluateField string, assessorId []string, verifierId []string, superviserId string) (model.Document, error)
 }
 
 type createDocumentService struct {
@@ -20,8 +20,9 @@ func NewCreateDocumentService(rR repository.DocumentRepository) CreateDocumentSe
 	}
 }
 
-func (cDS *createDocumentService) CreateDocument(userId string, name string, assessorId []string, verifierId []string, superviserId string) (model.Document, error) {
+func (cDS *createDocumentService) CreateDocument(userId string, name string, EvaluateField string, assessorId []string, verifierId []string, superviserId string) (model.Document, error) {
 	doc := model.Document{
+		EvaluteField: EvaluateField,
 		CreatedBy:    userId,
 		Name:         name,
 		AssessorId:   assessorId,

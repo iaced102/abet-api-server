@@ -7,5 +7,5 @@ type CreateDetailReportRepository interface {
 }
 
 type GetDetailReportRepository interface {
-	GetDetailReport(dR model.DetailReport) ([]model.DetailReport, error)
+	GetDetailReport(reportId string) ([]model.DetailReport, error)
 }

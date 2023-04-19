@@ -7,6 +7,8 @@ import (
 
 type GetDocumentService interface {
 	GetDocument(documentId string) (model.Document, error)
+	GetAllDocument() ([]model.Document, error)
+	GetAllDocumentByUserId(userId string) ([]model.Document, error)
 }
 
 type getDocumentService struct {
@@ -24,5 +26,16 @@ func (cDS *getDocumentService) GetDocument(documentId string) (model.Document, e
 		Id: documentId,
 	}
 	e := cDS.documentRepository.GetDocument(&doc)
+	return doc, e
+}
+
+func (cDS *getDocumentService) GetAllDocument() ([]model.Document, error) {
+	doc := []model.Document{}
+	e := cDS.documentRepository.GetAllDocument(&doc)
+	return doc, e
+}
+func (cDS *getDocumentService) GetAllDocumentByUserId(userId string) ([]model.Document, error) {
+
+	doc, e := cDS.documentRepository.GetAllDocumentByUserId(userId)
 	return doc, e
 }

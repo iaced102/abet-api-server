@@ -64,6 +64,13 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 		return forward(context, authObject, c.ReportController.GetDetailDocument)
 	})
 
+	group.GET("/get-document", func(context echo.Context) error {
+		return forward(context, authObject, c.ReportController.GetAllDocument)
+	})
+	group.GET("/get-document-by-user", func(context echo.Context) error {
+		return forward(context, authObject, c.ReportController.GetAllDocumentById)
+	})
+
 	return e
 }
 func forward(context echo.Context, authObject aAuth.AuthObject, f func(*controller.Context) error) error {

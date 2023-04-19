@@ -2,6 +2,8 @@ package controller
 
 import (
 	"aBet/adapters/ports/incoming"
+	"aBet/adapters/ports/outgoing"
+	"aBet/model"
 	"aBet/usecase/service"
 	dservice "aBet/usecase/service/document"
 	rService "aBet/usecase/service/report"
@@ -22,6 +24,28 @@ type reportController struct {
 type ReportController interface {
 	CreateNewReport(c *Context) error
 	GetDetailDocument(c *Context) error
+	GetAllDocument(c *Context) error
+	GetAllDocumentById(c *Context) error
+}
+
+type reportByDocumentForm struct {
+	reportTemplate []string
+}
+
+var documentForm = map[string]([]string){
+	"PI.3.1": []string{"PI.3.1a", "PI.3.1b"},
+	"PI.3.2": []string{"PI.3.2a", "PI.3.2b"},
+	"PI.3.3": []string{"0"},
+	"PI.3.4": []string{"PI.3.4a", "PI.3.4b"},
+}
+var detailReportTemplate = map[string]string{
+	"PI.3.1_PI.3.1a": "{tp1:'',tp2:'',tp3:''}",
+	"PI.3.1_PI.3.1b": "{tp1:'',tp2:''}",
+	"PI.3.2_PI.3.2a": "{tp1:''}",
+	"PI.3.2_PI.3.2b": "{tp1:''}",
+	"PI.3.3_0":       "{tp1:'',tp2:'',tp3:'',tp4:''}",
+	"PI.3.4_PI.3.2a": "{tp1:'',tp2:''}",
+	"PI.3.4_PI.3.2b": "{tp1:'',tp2:''}",
 }
 
 func NewReportController(cRS rService.CreateReportService, cDS dservice.CreateDocumentService, cDRS service.CreateDetailReportService, gDS dservice.GetDocumentService, gRS rService.GetReportService, gDRS service.GetDetailReportService) ReportController {
@@ -34,65 +58,77 @@ func NewReportController(cRS rService.CreateReportService, cDS dservice.CreateDo
 		getDetailReportService:    gDRS,
 	}
 }
+func (rC *reportController) GetAllDocument(c *Context) error {
+	doc, e := rC.getDocumentService.GetAllDocument()
+	if e != nil {
+		return c.Output(http.StatusBadRequest, nil, e)
+	}
+	return c.Output(http.StatusOK, doc, nil)
+}
 
+func (rC *reportController) GetAllDocumentById(c *Context) error {
+	userId := c.AuthObject.GetUserUserName()
+	fmt.Println(userId)
+	doc, e := rC.getDocumentService.GetAllDocumentByUserId(userId)
+	if e != nil {
+		return c.Output(http.StatusBadRequest, nil, e)
+	}
+	return c.Output(http.StatusOK, doc, nil)
+}
 func (rC *reportController) CreateNewReport(c *Context) error {
 	var DocumentConfig incoming.CreateReport
-	fmt.Println(DocumentConfig, "___________________________")
 	c.Bind(&DocumentConfig)
-	fmt.Println(DocumentConfig)
-	if DocumentConfig.DocumentId == "" {
-		if DocumentConfig.Name == "" {
-			c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params name"))
-		}
-		if DocumentConfig.SuperviserId == "" {
-			c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params SuperViderId"))
-		}
-		if len(DocumentConfig.AssessorId) == 0 {
-			c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least AssenorId"))
-		}
-		if len(DocumentConfig.VerifierId) == 0 {
-			c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least VerifierId"))
-		}
-		if DocumentConfig.EvaluateField == "" {
-			c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params EvaluateField"))
-		}
-		if DocumentConfig.IdentifierId == "" {
-			c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params IdentifierId"))
-		}
-		if len(DocumentConfig.ListStudent) == 0 {
-			c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least student"))
-		}
-		userId := c.AuthObject.GetUserId()
-		document, e := rC.createDocumentService.CreateDocument(userId, DocumentConfig.Name, DocumentConfig.AssessorId, DocumentConfig.VerifierId, DocumentConfig.SuperviserId)
-		if e != nil {
-			return c.Output(http.StatusBadRequest, nil, e)
-		}
-
-		if e != nil {
-			c.Output(http.StatusBadRequest, nil, e)
-		}
-		report, e := rC.createReportService.CreateReport(document.Id, DocumentConfig.EvaluateField, DocumentConfig.ListStudent)
-		if e != nil {
-			return c.Output(http.StatusBadRequest, nil, e)
-		}
-		err := rC.createDetailReportService.CreateListDetailReport(DocumentConfig.ListStudent, report.Id, report.Field)
-		if err != nil {
-			return c.Output(http.StatusBadRequest, nil, err)
-		}
-		return c.Output(http.StatusCreated, nil, nil)
-
-	} else {
-		report, e := rC.createReportService.CreateReport(DocumentConfig.DocumentId, DocumentConfig.EvaluateField, DocumentConfig.ListStudent)
-		if e != nil {
-			return c.Output(http.StatusBadRequest, nil, e)
-		}
-		err := rC.createDetailReportService.CreateListDetailReport(DocumentConfig.ListStudent, report.Id, report.Field)
-		if err != nil {
-			return c.Output(http.StatusBadRequest, nil, err)
-		}
-		return c.Output(http.StatusCreated, nil, nil)
-		// document :=
+	if DocumentConfig.Name == "" {
+		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params name"))
 	}
+	if DocumentConfig.SuperviserId == "" {
+		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params SuperViderId"))
+	}
+	if len(DocumentConfig.AssessorId) == 0 {
+		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least AssenorId"))
+	}
+	if len(DocumentConfig.VerifierId) == 0 {
+		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least VerifierId"))
+	}
+	if DocumentConfig.EvaluateField == "" {
+		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params EvaluateField"))
+	}
+	if DocumentConfig.IdentifierId == "" {
+		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params IdentifierId"))
+	}
+	if len(DocumentConfig.ListStudent) == 0 {
+		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least student"))
+	}
+
+	ids, er := documentForm[DocumentConfig.EvaluateField]
+	if !er {
+		return c.Output(http.StatusBadRequest, nil, errors.New("invalid evaluateField"))
+	}
+	fmt.Println(ids)
+
+	userId := c.AuthObject.GetUserId()
+	document, e := rC.createDocumentService.CreateDocument(userId, DocumentConfig.Name, DocumentConfig.EvaluateField, DocumentConfig.AssessorId, DocumentConfig.VerifierId, DocumentConfig.SuperviserId)
+	if e != nil {
+		return c.Output(http.StatusBadRequest, nil, e)
+	}
+
+	if e != nil {
+		c.Output(http.StatusBadRequest, nil, e)
+	}
+	for _, i := range ids {
+		report, e := rC.createReportService.CreateReport(document.Id, i, DocumentConfig.ListStudent)
+		if e != nil {
+			return c.Output(http.StatusBadRequest, nil, e)
+		}
+		templateName := fmt.Sprint(document.EvaluteField, "_"+i)
+		err := rC.createDetailReportService.CreateListDetailReport(DocumentConfig.ListStudent, report.Id, report.Field, detailReportTemplate[templateName])
+		if err != nil {
+			return c.Output(http.StatusBadRequest, nil, err)
+		}
+	}
+
+	return c.Output(http.StatusCreated, document, nil)
+
 }
 
 func (rC *reportController) GetDetailDocument(c *Context) error {
@@ -100,19 +136,36 @@ func (rC *reportController) GetDetailDocument(c *Context) error {
 	if e != nil {
 		return c.Output(http.StatusBadRequest, doc, e)
 	}
+	outgoingGetDetailDocument := outgoing.GetDetailDocument{
+		Id:           doc.Id,
+		CreatedBy:    doc.CreatedBy,
+		CreatedAt:    doc.CreatedAt,
+		UpDatedAt:    doc.UpDatedAt,
+		AssessorId:   doc.AssessorId,
+		VerifierId:   doc.VerifierId,
+		SuperviserId: doc.SuperviserId,
+		EvaluteField: doc.EvaluteField,
+		Data:         []outgoing.Report{},
+	}
 	report, e := rC.getReportService.GetAllReport(doc.Id)
 	if e != nil {
-		return c.Output(http.StatusBadRequest, doc, e)
+		return c.Output(http.StatusBadRequest, doc, errors.New("can not find with documentId"))
 	}
 	fmt.Println(report)
-	reportIds := []string{}
-	for _, r := range report {
-		reportIds = append(reportIds, r.Id)
-	}
-	result, e := rC.getDetailReportService.GetDetailReport(reportIds)
-	if e != nil {
-		return c.Output(http.StatusBadRequest, doc, e)
+	// reportIds := []string{}
+	for i, r := range report {
+		outgoingGetDetailDocument.Data = append(outgoingGetDetailDocument.Data, outgoing.Report{
+			Id:     r.Id,
+			Field:  r.Field,
+			Detail: []model.DetailReport{},
+		})
+		result, e := rC.getDetailReportService.GetDetailReport(r.Id)
+		if e != nil {
+			return c.Output(http.StatusBadRequest, doc, e)
+		}
+		outgoingGetDetailDocument.Data[i].Detail = result
+
 	}
 
-	return c.Output(http.StatusOK, result, nil)
+	return c.Output(http.StatusOK, outgoingGetDetailDocument, nil)
 }

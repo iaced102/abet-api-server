@@ -4,7 +4,7 @@ import "aBet/model"
 
 type DetailReportRepository interface {
 	CreateDetailReport(dR model.DetailReport) error
-	GetDetailReport(dR model.DetailReport) ([]model.DetailReport, error)
+	GetDetailReport(reportId string) ([]model.DetailReport, error)
 }
 
 type detailReportRepository struct {
@@ -22,8 +22,8 @@ func (dRR *detailReportRepository) CreateDetailReport(dR model.DetailReport) err
 	return e
 }
 
-func (dRR *detailReportRepository) GetDetailReport(dR model.DetailReport) ([]model.DetailReport, error) {
+func (dRR *detailReportRepository) GetDetailReport(reportId string) ([]model.DetailReport, error) {
 	result := []model.DetailReport{}
-	e := dRR.db.pgdb.Model(&result).Where("report_id = ?", dR.Id).Select()
+	e := dRR.db.pgdb.Model(&result).Where("report_id = ?", reportId).Select()
 	return result, e
 }

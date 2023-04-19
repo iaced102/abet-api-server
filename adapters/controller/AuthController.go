@@ -184,7 +184,7 @@ func (uC *authController) GetDetailUsers(c *Context) error {
 	c.Bind(&UsersAccountParams)
 	u, err := uC.usersService.GetByIDUsers(UsersAccountParams.Id)
 	for i := 0; i < len(u); i++ {
-		u[i].CryptPassword = DecryptPass(u[i].CryptPassword, "crypt/privkeyv2.pem")
+		// u[i].CryptPassword = DecryptPass(u[i].CryptPassword, "crypt/privkeyv2.pem")
 	}
 	return c.Output(http.StatusOK, u, err)
 }

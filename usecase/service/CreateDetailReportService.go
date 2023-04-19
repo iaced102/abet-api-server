@@ -8,7 +8,7 @@ import (
 )
 
 type CreateDetailReportService interface {
-	CreateListDetailReport(listStudent []model.Student, reportId string, field string) error
+	CreateListDetailReport(listStudent []model.Student, reportId string, field string, template string) error
 }
 
 type createDetailReportService struct {
@@ -21,7 +21,7 @@ func NewCreateDetailReportService(rR repository.CreateDetailReportRepository) Cr
 	}
 }
 
-func (cDRS *createDetailReportService) CreateListDetailReport(listStudent []model.Student, reportId string, field string) error {
+func (cDRS *createDetailReportService) CreateListDetailReport(listStudent []model.Student, reportId string, field string, template string) error {
 	for _, s := range listStudent {
 		detailReport := model.DetailReport{
 			Id:        uuid.NewString(),
@@ -30,6 +30,7 @@ func (cDRS *createDetailReportService) CreateListDetailReport(listStudent []mode
 			LastName:  s.LastName,
 			ClassId:   s.ClassId,
 			ReportId:  reportId,
+			Value:     template,
 		}
 		e := cDRS.detailReportRepository.CreateDetailReport(detailReport)
 		if e != nil {

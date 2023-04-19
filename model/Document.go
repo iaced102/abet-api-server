@@ -11,5 +11,5 @@ type Document struct {
 	SuperviserId string   `pg:"superviser_id"`
 	tableName    struct{} `pg:"document"`
 	// IdentifierId string `pg:"identifier_id"`
-	// EvaluteField string `pg:"evaluate_field"`
+	EvaluteField string `pg:"evaluate_field"`
 }

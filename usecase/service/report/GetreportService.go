@@ -26,12 +26,5 @@ func (cR *getReportService) GetAllReport(documentId string) ([]model.Report, err
 	}
 	result := []model.Report{}
 	result, e := cR.reportRepository.GetAllReport(&report)
-	if len(result) > 1 {
-		for i, v := range result {
-			if v.IsTemplate == 1 {
-				result = append(result[:i], result[i+1:]...)
-			}
-		}
-	}
 	return result, e
 }

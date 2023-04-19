@@ -6,7 +6,7 @@ import (
 )
 
 type GetDetailReportService interface {
-	GetDetailReport(reportId []string) (map[string][]model.DetailReport, error)
+	GetDetailReport(reportId string) ([]model.DetailReport, error)
 }
 
 type getDetailReportService struct {
@@ -19,22 +19,11 @@ func NewGetDetailReportService(gDRR repository.GetDetailReportRepository) GetDet
 	}
 }
 
-func (gDRS *getDetailReportService) GetDetailReport(reportId []string) (map[string][]model.DetailReport, error) {
-	result := map[string][]model.DetailReport{}
-	for _, s := range reportId {
-		detailReport := model.DetailReport{
-
-			ReportId: s,
-		}
-		subResult, e := gDRS.detailReportRepository.GetDetailReport(detailReport)
-		if e != nil {
-			return nil, e
-		}
-		result[s] = []model.DetailReport{}
-		for _, i := range subResult {
-			result[s] = append(result[s], i)
-		}
-
+func (gDRS *getDetailReportService) GetDetailReport(reportId string) ([]model.DetailReport, error) {
+	result, e := gDRS.detailReportRepository.GetDetailReport(reportId)
+	if e != nil {
+		return nil, e
 	}
+
 	return result, nil
 }

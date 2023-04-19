@@ -37,7 +37,8 @@ func NewAuthObject(data []byte, jwt string) (sAuth.AuthObject, error) {
 		return nil, err
 	}
 	userId := string(v.GetStringBytes("id"))
-	userDisplayName := string(v.GetStringBytes("username"))
+	userDisplayName := string(v.GetStringBytes("userName"))
+	fmt.Println(userDisplayName)
 	userType := string(v.GetStringBytes("role"))
 	return &authObject{
 			id:       userId,

@@ -22,15 +22,10 @@ func NewCreateReportService(rR repository.ReportRepository) CreateReportService 
 }
 
 func (cR *createReportService) CreateReport(documentId string, field string, listStudent []model.Student) (model.Report, error) {
-	isTemplate := 0
-	if field == "" {
-		isTemplate = 1
-	}
 	report := model.Report{
 		DocumentId: documentId,
 		Field:      field,
 		Id:         uuid.NewString(),
-		IsTemplate: isTemplate,
 	}
 	e := cR.reportRepository.CreateReport(&report)
 	return report, e

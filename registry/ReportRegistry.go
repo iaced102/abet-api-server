@@ -9,7 +9,7 @@ import (
 )
 
 func (r *registry) NewReportController() controller.ReportController {
-	return controller.NewReportController(r.NewCreateReportService(), r.NewCreateDocumentService(), r.NewCreateDetailReportService(), r.NewGetDocumentService(), r.NewGetReportService(), r.NewGetDetailReportService())
+	return controller.NewReportController(r.NewCreateReportService(), r.NewCreateDocumentService(), r.NewCreateDetailReportService(), r.NewGetDocumentService(), r.NewGetReportService(), r.NewGetDetailReportService(), r.NewEditDetailReportService())
 }
 
 func (r *registry) NewCreateReportService() rService.CreateReportService {
@@ -51,5 +51,12 @@ func (r *registry) NewGetDetailReportService() service.GetDetailReportService {
 	return service.NewGetDetailReportService(r.NewGetDetailReportRepository())
 }
 func (r *registry) NewGetDetailReportRepository() repository.DetailReportRepository {
+	return repository.NewDetailReportRepository(r.db)
+}
+
+func (r *registry) NewEditDetailReportService() service.EditDetailReportService {
+	return service.NewEditDetailReportService(r.NewEditDetailReportRepository())
+}
+func (r *registry) NewEditDetailReportRepository() repository.DetailReportRepository {
 	return repository.NewDetailReportRepository(r.db)
 }

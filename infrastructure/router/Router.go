@@ -71,6 +71,10 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 		return forward(context, authObject, c.ReportController.GetAllDocumentById)
 	})
 
+	group.PUT("/submit-report", func(context echo.Context) error {
+		return forward(context, authObject, c.ReportController.SubmitReport)
+	})
+
 	return e
 }
 func forward(context echo.Context, authObject aAuth.AuthObject, f func(*controller.Context) error) error {

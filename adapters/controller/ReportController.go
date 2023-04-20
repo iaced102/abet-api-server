@@ -19,6 +19,7 @@ type reportController struct {
 	createDocumentService     dservice.CreateDocumentService
 	getDocumentService        dservice.GetDocumentService
 	createDetailReportService service.CreateDetailReportService
+	editDetailReportService   service.EditDetailReportService
 }
 
 type ReportController interface {
@@ -26,6 +27,7 @@ type ReportController interface {
 	GetDetailDocument(c *Context) error
 	GetAllDocument(c *Context) error
 	GetAllDocumentById(c *Context) error
+	SubmitReport(c *Context) error
 }
 
 type reportByDocumentForm struct {
@@ -48,7 +50,7 @@ var detailReportTemplate = map[string]string{
 	"PI.3.4_PI.3.2b": "{tp1:'',tp2:''}",
 }
 
-func NewReportController(cRS rService.CreateReportService, cDS dservice.CreateDocumentService, cDRS service.CreateDetailReportService, gDS dservice.GetDocumentService, gRS rService.GetReportService, gDRS service.GetDetailReportService) ReportController {
+func NewReportController(cRS rService.CreateReportService, cDS dservice.CreateDocumentService, cDRS service.CreateDetailReportService, gDS dservice.GetDocumentService, gRS rService.GetReportService, gDRS service.GetDetailReportService, eDRS service.EditDetailReportService) ReportController {
 	return &reportController{
 		createReportService:       cRS,
 		getReportService:          gRS,
@@ -56,6 +58,7 @@ func NewReportController(cRS rService.CreateReportService, cDS dservice.CreateDo
 		getDocumentService:        gDS,
 		createDetailReportService: cDRS,
 		getDetailReportService:    gDRS,
+		editDetailReportService:   eDRS,
 	}
 }
 func (rC *reportController) GetAllDocument(c *Context) error {
@@ -168,4 +171,17 @@ func (rC *reportController) GetDetailDocument(c *Context) error {
 	}
 
 	return c.Output(http.StatusOK, outgoingGetDetailDocument, nil)
+}
+
+func (rC *reportController) SubmitReport(c *Context) error {
+	var detailReport []model.DetailReport
+
+	c.Bind(&detailReport)
+	for _, i := range detailReport {
+		e := rC.editDetailReportService.EditDetailReport(i)
+		if e != nil {
+			return c.Output(http.StatusBadRequest, nil, e)
+		}
+	}
+	return c.Output(http.StatusOK, detailReport, nil)
 }

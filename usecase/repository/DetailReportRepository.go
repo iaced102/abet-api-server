@@ -9,3 +9,7 @@ type CreateDetailReportRepository interface {
 type GetDetailReportRepository interface {
 	GetDetailReport(reportId string) ([]model.DetailReport, error)
 }
+
+type EditDetailReportRepository interface {
+	EditDetailReport(model.DetailReport) error
+}

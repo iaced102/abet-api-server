@@ -9,6 +9,7 @@ type GetDocumentService interface {
 	GetDocument(documentId string) (model.Document, error)
 	GetAllDocument() ([]model.Document, error)
 	GetAllDocumentByUserId(userId string) ([]model.Document, error)
+	GetAllPIbySOId(userId string) ([]model.Document, error)
 }
 
 type getDocumentService struct {
@@ -37,5 +38,11 @@ func (cDS *getDocumentService) GetAllDocument() ([]model.Document, error) {
 func (cDS *getDocumentService) GetAllDocumentByUserId(userId string) ([]model.Document, error) {
 
 	doc, e := cDS.documentRepository.GetAllDocumentByUserId(userId)
+	return doc, e
+}
+
+func (cDS *getDocumentService) GetAllPIbySOId(sOId string) ([]model.Document, error) {
+
+	doc, e := cDS.documentRepository.GetAllDocumentByUserId(sOId)
 	return doc, e
 }

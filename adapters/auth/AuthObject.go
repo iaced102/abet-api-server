@@ -8,7 +8,7 @@ type AuthObject interface {
 	GetUserResetPswdInfo() string
 	GetUserAccType() string
 	GetUserIp() string
-	GetUserRole() string
+	GetUserRole() int
 	GetUserExp() int64
 	GetToken() string
 }

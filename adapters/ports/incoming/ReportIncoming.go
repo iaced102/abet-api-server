@@ -9,12 +9,12 @@ des: Khai báo và xử lý thông tin nhận từ request
 */
 
 type CreateReport struct {
-	DocumentId    string          `json:"documentId"`
+	// DocumentId    string          `json:"documentId"`
 	Name          string          `json:"name" param:"name"`
 	AssessorId    []string        `json:"assessorId"`
-	VerifierId    []string        `json:"verifierId"`
-	SuperviserId  string          `json:"superviserId"`
+	VerifierId    string          `json:"verifierId"`
 	EvaluateField string          `json:"evaluateField"`
 	IdentifierId  string          `json:"identifierId"`
 	ListStudent   []model.Student `json:"listStudent"`
+	SODocumentId  string          `json:"sODocumentId"`
 }

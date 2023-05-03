@@ -24,6 +24,13 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 	config := getMiddleWareConfig(&authObject)
 	// e.Use(middleware.JWTWithConfig(config))
 	group := e.Group("")
+	// group.Use(middleware.CORS())
+	// group.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	// 	AllowOrigins:     []string{"http://localhost:8080"},
+	// 	AllowHeaders:     []string{"*"},
+	// 	AllowMethods:     []string{"GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"},
+	// 	AllowCredentials: true,
+	// }))
 	group.Use(middleware.JWTWithConfig(config))
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -45,7 +52,7 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 	e.POST("/users-account/login", func(context echo.Context) error {
 		return forward(context, authObject, c.AuthController.LoginUserAccount)
 	})
-	e.POST("/user-account/create", func(context echo.Context) error {
+	e.POST("/users-account/create", func(context echo.Context) error {
 		return forward(context, authObject, c.AuthController.AddUsers)
 	})
 	e.POST("/users-account/update", func(context echo.Context) error {
@@ -56,23 +63,37 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 	})
 
 	//__________________________________________________
-	group.POST("/create-report", func(context echo.Context) error {
+	group.POST("document/create-report", func(context echo.Context) error {
 		return forward(context, authObject, c.ReportController.CreateNewReport)
 	})
 
-	group.GET("/get-document/:documentId", func(context echo.Context) error {
+	group.GET("document/get-document/:documentId", func(context echo.Context) error {
 		return forward(context, authObject, c.ReportController.GetDetailDocument)
 	})
 
-	group.GET("/get-document", func(context echo.Context) error {
+	group.GET("document/get-document", func(context echo.Context) error {
 		return forward(context, authObject, c.ReportController.GetAllDocument)
 	})
-	group.GET("/get-document-by-user", func(context echo.Context) error {
+	group.GET("document/get-document-by-user", func(context echo.Context) error {
 		return forward(context, authObject, c.ReportController.GetAllDocumentById)
 	})
 
-	group.PUT("/submit-report", func(context echo.Context) error {
+	group.PUT("document/submit-report", func(context echo.Context) error {
 		return forward(context, authObject, c.ReportController.SubmitReport)
+	})
+	group.GET("document/get-all-document-by-soId/:id", func(context echo.Context) error {
+		return forward(context, authObject, c.ReportController.GetAllPIbySOId)
+	})
+	group.GET("SO/get-detail-so/:id", func(context echo.Context) error {
+		return forward(context, authObject, c.SOController.GetDetailSODocument)
+	})
+
+	group.POST("SO/create-so", func(context echo.Context) error {
+		return forward(context, authObject, c.SOController.CreateNewSODocument)
+	})
+
+	group.GET("SO/get-all-so", func(context echo.Context) error {
+		return forward(context, authObject, c.SOController.GetAllSODocument)
 	})
 
 	return e

@@ -23,7 +23,7 @@ func (c *Context) Output(code int, i interface{}, e error) error {
 	if e != nil {
 		errMessage = e.Error()
 	}
-	return c.Context.JSON(code, map[string]interface{}{"data": i, "error": errMessage})
+	return c.Context.JSON(code, map[string]interface{}{"data": i, "error": errMessage, "status": code})
 }
 
 func (c *Context) Bind(i interface{}) error {

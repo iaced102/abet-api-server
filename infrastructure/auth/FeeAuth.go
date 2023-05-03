@@ -25,7 +25,7 @@ type authObject struct {
 	accType       string
 	userAgent     string
 	ip            string
-	role          string
+	role          int
 	exp           int64
 	token         string
 }
@@ -38,8 +38,7 @@ func NewAuthObject(data []byte, jwt string) (sAuth.AuthObject, error) {
 	}
 	userId := string(v.GetStringBytes("id"))
 	userDisplayName := string(v.GetStringBytes("userName"))
-	fmt.Println(userDisplayName)
-	userType := string(v.GetStringBytes("role"))
+	userType := v.GetInt("userType")
 	return &authObject{
 			id:       userId,
 			userName: userDisplayName,
@@ -71,7 +70,7 @@ func (au *authObject) GetUserAccType() string {
 func (au *authObject) GetUserIp() string {
 	return au.ip
 }
-func (au *authObject) GetUserRole() string {
+func (au *authObject) GetUserRole() int {
 	return au.role
 }
 func (au *authObject) GetUserExp() int64 {

@@ -7,9 +7,8 @@ type Document struct {
 	CreatedAt    string   `pg:"created_at"`
 	UpDatedAt    string   `pg:"updated_at"`
 	AssessorId   []string `pg:"assessor_id"`
-	VerifierId   []string `pg:"verifier_id"`
-	SuperviserId string   `pg:"superviser_id"`
+	VerifierId   string   `pg:"verifier_id"`
 	tableName    struct{} `pg:"document"`
-	// IdentifierId string `pg:"identifier_id"`
-	EvaluteField string `pg:"evaluate_field"`
+	SODocumentId string   `pg:"so_document_id"`
+	EvaluteField string   `pg:"evaluate_field"`
 }

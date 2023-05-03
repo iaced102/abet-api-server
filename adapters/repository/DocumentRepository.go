@@ -13,6 +13,7 @@ type DocumentRepository interface {
 	GetDocument(doc *model.Document) error
 	GetAllDocument(doc *[]model.Document) error
 	GetAllDocumentByUserId(userId string) ([]model.Document, error)
+	GetAllPIbySOId(sOId string) ([]model.Document, error)
 }
 
 func NewDocumentRepository(db *Orm) DocumentRepository {
@@ -40,5 +41,11 @@ func (dR *documentRepository) GetAllDocumentByUserId(userId string) ([]model.Doc
 	doc := []model.Document{}
 	fmt.Println("created_by = '" + userId + "' or assessor_id like '%" + userId + "%' or verifier_id like '%" + userId + "%' or superviser_id = '" + userId + "'")
 	e := dR.db.pgdb.Model(&doc).Where("created_by = '" + userId + "' or assessor_id like '%" + userId + "%' or verifier_id like '%" + userId + "%' or superviser_id = '" + userId + "'").Select()
+	return doc, e
+}
+
+func (dR *documentRepository) GetAllPIbySOId(sOId string) ([]model.Document, error) {
+	doc := []model.Document{}
+	e := dR.db.pgdb.Model(&doc).Where("so_document_id = ?", sOId).Select()
 	return doc, e
 }

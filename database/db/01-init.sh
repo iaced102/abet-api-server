@@ -17,6 +17,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
       first_name varchar(20),
       last_name varchar(20),
       email varchar(80),
+      custom_field text,
 	  UNIQUE(id, user_name)
 	);
   CREATE TABLE IF NOT EXISTS document (
@@ -29,8 +30,18 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     verifier_id varchar(150),
     superviser_id varchar(80),
     evaluate_field varchar(20),
+    so_document_id varchar(80)
 	  UNIQUE(id)
 	);
+  CREATE TABLE IF NOT EXISTS so_document (
+    id varchar(80) NOT NULL PRIMARY KEY,
+    name varchar(80),
+    created_at varchar(80) NOT NULL ,
+	  created_by varchar(80) NOT NULL ,
+    identifier_id varchar(60),
+    description text,
+	  UNIQUE(id)
+  );
   CREATE TABLE IF NOT EXISTS report (
 	  id varchar(80) NOT NULL PRIMARY KEY,
 	  document_id varchar(80),

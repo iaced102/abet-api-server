@@ -19,6 +19,7 @@ import (
 type Claims struct {
 	Username string `json:"userName"`
 	Id       string `json:"id"`
+	UserType int    `json:"userType"`
 	jwt.StandardClaims
 }
 
@@ -65,6 +66,7 @@ func GenerateToken(accountUser model.Users) (string, error) {
 	claims := &Claims{
 		Username: accountUser.UserName,
 		Id:       accountUser.Id,
+		UserType: accountUser.UserType,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 		},

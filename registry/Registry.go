@@ -23,5 +23,6 @@ func (r *registry) NewAppController() controller.AppController {
 	return controller.AppController{
 		AuthController:   r.NewAuthController(),
 		ReportController: r.NewReportController(),
+		SOController:     r.NewSOController(),
 	}
 }

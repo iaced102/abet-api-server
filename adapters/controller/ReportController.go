@@ -28,6 +28,7 @@ type ReportController interface {
 	GetAllDocument(c *Context) error
 	GetAllDocumentById(c *Context) error
 	SubmitReport(c *Context) error
+	GetAllPIbySOId(c *Context) error
 }
 
 type reportByDocumentForm struct {
@@ -82,25 +83,23 @@ func (rC *reportController) CreateNewReport(c *Context) error {
 	var DocumentConfig incoming.CreateReport
 	c.Bind(&DocumentConfig)
 	if DocumentConfig.Name == "" {
-		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params name"))
+		return c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params name"))
 	}
-	if DocumentConfig.SuperviserId == "" {
-		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params SuperViderId"))
-	}
+
 	if len(DocumentConfig.AssessorId) == 0 {
-		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least AssenorId"))
+		return c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least AssenorId"))
 	}
-	if len(DocumentConfig.VerifierId) == 0 {
-		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least VerifierId"))
+	if DocumentConfig.VerifierId == "" {
+		return c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least VerifierId"))
 	}
 	if DocumentConfig.EvaluateField == "" {
-		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params EvaluateField"))
+		return c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params EvaluateField"))
 	}
 	if DocumentConfig.IdentifierId == "" {
-		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params IdentifierId"))
+		return c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params IdentifierId"))
 	}
 	if len(DocumentConfig.ListStudent) == 0 {
-		c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least student"))
+		return c.Output(http.StatusBadRequest, nil, errors.New("Create Report need params the least student"))
 	}
 
 	ids, er := documentForm[DocumentConfig.EvaluateField]
@@ -110,7 +109,7 @@ func (rC *reportController) CreateNewReport(c *Context) error {
 	fmt.Println(ids)
 
 	userId := c.AuthObject.GetUserId()
-	document, e := rC.createDocumentService.CreateDocument(userId, DocumentConfig.Name, DocumentConfig.EvaluateField, DocumentConfig.AssessorId, DocumentConfig.VerifierId, DocumentConfig.SuperviserId)
+	document, e := rC.createDocumentService.CreateDocument(userId, DocumentConfig.Name, DocumentConfig.EvaluateField, DocumentConfig.AssessorId, DocumentConfig.VerifierId, DocumentConfig.SODocumentId)
 	if e != nil {
 		return c.Output(http.StatusBadRequest, nil, e)
 	}
@@ -146,7 +145,6 @@ func (rC *reportController) GetDetailDocument(c *Context) error {
 		UpDatedAt:    doc.UpDatedAt,
 		AssessorId:   doc.AssessorId,
 		VerifierId:   doc.VerifierId,
-		SuperviserId: doc.SuperviserId,
 		EvaluteField: doc.EvaluteField,
 		Data:         []outgoing.Report{},
 	}
@@ -184,4 +182,12 @@ func (rC *reportController) SubmitReport(c *Context) error {
 		}
 	}
 	return c.Output(http.StatusOK, detailReport, nil)
+}
+
+func (rC *reportController) GetAllPIbySOId(c *Context) error {
+	doc, e := rC.getDocumentService.GetAllPIbySOId(c.QueryParam("sOId"))
+	if e != nil {
+		return c.Output(http.StatusBadRequest, nil, e)
+	}
+	return c.Output(http.StatusOK, doc, nil)
 }

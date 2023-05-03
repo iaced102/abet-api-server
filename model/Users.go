@@ -11,5 +11,6 @@ type Users struct {
 	LastName      string   `json:"lastName" db:"last_name" form:"lastName" pg:"last_name"`
 	Email         string   `json:"email" db:"email" form:"email" pg:"email"`
 	CryptPassword string   `json:"cryptPassword" db:"cryptPassword" form:"cryptPassword" pg:"crypt_password"`
+	CustomField   string   `db:"custom_field" json:"customField"`
 	tableName     struct{} `pg:"users"`
 }

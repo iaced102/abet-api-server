@@ -15,7 +15,7 @@ type GetDetailDocument struct {
 	CreatedAt    string   `json:"createdAt"`
 	UpDatedAt    string   `json:"updatedAt"`
 	AssessorId   []string `json:"assessorId"`
-	VerifierId   []string `json:"verifierId"`
+	VerifierId   string   `json:"verifierId"`
 	SuperviserId string   `json:"superviserId"`
 	// IdentifierId string `pg:"identifier_id"`
 	EvaluteField string   `json:"evaluateField"`

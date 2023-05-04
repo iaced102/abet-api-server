@@ -25,7 +25,7 @@ type GetDetailDocument struct {
 type Report struct {
 	Id     string               `json:"id"`
 	Field  string               `json:"field"`
-	Detail []model.DetailReport `json:"Detail"`
+	Detail []model.DetailReport `json:"detail"`
 }
 
 // type DetailReport struct {

@@ -33,7 +33,7 @@ func (sOC *sOController) CreateNewSODocument(c *Context) error {
 	}
 	sODocument := model.SODocument{}
 	c.Bind(&sODocument)
-	s, e := sOC.createSOService.CreateSO(sODocument.Name, sODocument.Desscription, c.AuthObject.GetUserId())
+	s, e := sOC.createSOService.CreateSO(sODocument.Name, sODocument.Desscription, sODocument.IdentifierId, c.AuthObject.GetUserId())
 	if e != nil {
 		return c.Output(http.StatusBadRequest, nil, e)
 	}

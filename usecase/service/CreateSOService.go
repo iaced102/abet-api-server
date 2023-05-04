@@ -9,7 +9,7 @@ import (
 )
 
 type CreateSOService interface {
-	CreateSO(name string, description string, userId string) (model.SODocument, error)
+	CreateSO(name string, description string, identifierId string, userId string) (model.SODocument, error)
 }
 
 type createSOService struct {
@@ -22,9 +22,10 @@ func NewCreateSOService(s repository.CreateSORepository) CreateSOService {
 	}
 }
 
-func (cSS *createSOService) CreateSO(name string, description string, userId string) (model.SODocument, error) {
+func (cSS *createSOService) CreateSO(name string, description string, identifierId string, userId string) (model.SODocument, error) {
 	sODocument := model.SODocument{
 		Id:           uuid.NewString(),
+		IdentifierId: identifierId,
 		Name:         name,
 		Desscription: description,
 		CreatedAt:    time.Now().Format("2006-01-02 15:04:05"),

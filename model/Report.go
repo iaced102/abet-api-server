@@ -9,12 +9,12 @@ type Report struct {
 
 type DetailReport struct {
 	Id        string   `json:"id" param:"id" pg:"id" query:"id" form:"id" pg:"id"   primary:"true"`
-	StudentId string   `pg:"student_id"`
-	FirstName string   `pg:"first_name"`
-	LastName  string   `pg:"last_name"`
-	ClassId   string   `pg:"class_id"`
-	ReportId  string   `pg:"report_id"`
-	Value     string   `pg:"value"`
+	StudentId string   `pg:"student_id" json:"studentId"`
+	FirstName string   `pg:"first_name" json:"firstName"`
+	LastName  string   `pg:"last_name" json:"lastName"`
+	ClassId   string   `pg:"class_id" json:"classId"`
+	ReportId  string   `pg:"report_id" json:"reportId"`
+	Value     string   `pg:"value" json:"value"`
 	tableName struct{} `pg:"detail_report"`
 }
 

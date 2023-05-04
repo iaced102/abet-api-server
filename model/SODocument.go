@@ -1,10 +1,10 @@
 package model
 
 type SODocument struct {
-	Id           string   `pg:"id"`
+	Id           string   `pg:"id" json:"id"`
 	Name         string   `pg:"name" json:"name"`
-	CreatedAt    string   `pg:"created_at"`
-	CreatedBy    string   `pg:"created_by"`
+	CreatedAt    string   `pg:"created_at" json:"createAt"`
+	CreatedBy    string   `pg:"created_by" json:"createBy"`
 	IdentifierId string   `pg:"identifier_id" json:"identifierId"`
 	Desscription string   `pg:"description" json:"description"`
 	tableName    struct{} `pg:"so_document"`

@@ -30,7 +30,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     verifier_id varchar(150),
     superviser_id varchar(80),
     evaluate_field varchar(20),
-    so_document_id varchar(80)
+    so_document_id varchar(80),
 	  UNIQUE(id)
 	);
   CREATE TABLE IF NOT EXISTS so_document (

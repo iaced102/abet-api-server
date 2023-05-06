@@ -1,4 +1,4 @@
-FROM golang:1.17-alpine
+FROM golang:1.20.4-alpine3.17
 LABEL maintainer="Me"
 
 

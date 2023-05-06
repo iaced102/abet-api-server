@@ -28,7 +28,7 @@ func InitApp(envPath string) (*echo.Echo, *repository.Orm) {
 
 	e := echo.New()
 	e = router.NewRouter(e, r.NewAppController())
-	if err := e.Start(":" + os.Getenv("SERVER_PORT")); err != nil {
+	if err := e.Start("0.0.0.0:" + os.Getenv("SERVER_PORT")); err != nil {
 		log.Fatalln(err)
 	}
 

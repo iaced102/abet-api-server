@@ -1,0 +1,11 @@
+version: "3"
+services: 
+  web:
+    container_name: echo_app
+    image: echo_app:latest
+    build: ./
+    command: go run main.go
+    volumes:
+      - .:/echo_app
+    ports: 
+      - "1234:1234"

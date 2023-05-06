@@ -2,6 +2,7 @@ package connection
 
 import (
 	"aBet/adapters/repository"
+	"fmt"
 	"os"
 
 	"github.com/go-pg/pg/v10"
@@ -26,5 +27,6 @@ func (mc *PostgresCon) Conn() (*repository.Orm, error) {
 		Database: os.Getenv("DB_DATABASE"),
 		Addr:     os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT"),
 	})
+	fmt.Println(conn)
 	return repository.NewOrm(conn), nil
 }

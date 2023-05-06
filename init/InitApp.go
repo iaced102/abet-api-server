@@ -5,6 +5,7 @@ import (
 	"aBet/infrastructure/database/connection"
 	"aBet/infrastructure/router"
 	"aBet/registry"
+	"fmt"
 	"log"
 	"os"
 
@@ -17,6 +18,7 @@ import (
 func InitApp(envPath string) (*echo.Echo, *repository.Orm) {
 	godotenv.Load(envPath)
 	db, err := connection.NewPostgresCon().Conn()
+	fmt.Println(db, err)
 	if err != nil {
 		log.Fatalln(err)
 	}

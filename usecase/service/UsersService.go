@@ -48,7 +48,7 @@ func (uS *usersService) DeleteUsers(Users model.Users) (model.Users, error) {
 // EditUsers implements UsersService
 func (uS *usersService) EditUsers(Users model.Users) (model.Users, error) {
 	Users.UpdatedAt = library.GetCurrentTimeStamp()
-	userInfo, e := uS.usersRepository.AddUsers(Users)
+	userInfo, e := uS.usersRepository.EditUsers(Users)
 	return userInfo, e
 }
 

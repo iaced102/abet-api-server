@@ -55,7 +55,7 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 	e.POST("/users-account/create", func(context echo.Context) error {
 		return forward(context, authObject, c.AuthController.AddUsers)
 	})
-	e.POST("/users-account/update", func(context echo.Context) error {
+	group.POST("/users-account/update", func(context echo.Context) error {
 		return forward(context, authObject, c.AuthController.UpdateUsers)
 	})
 	e.DELETE("/users-account/delete", func(context echo.Context) error {

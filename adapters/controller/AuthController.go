@@ -6,6 +6,7 @@ import (
 	"aBet/model"
 	"aBet/usecase/service"
 	"crypto/rsa"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -148,11 +149,49 @@ func (uC *authController) DeleteUsers(c *Context) error {
 
 // EditUsers implements SystemConfigController
 func (uC *authController) UpdateUsers(c *Context) error {
-	var AccountParams model.Users
+	userId := c.AuthObject.GetUserId()
+	currentUserInfo := model.Users{
+		Id: userId,
+	}
+	LcurrentUserInfo, e := uC.usersService.GetByIDUsers(userId)
+	currentUserInfo = LcurrentUserInfo[0]
+	if e != nil {
+		return c.Output(http.StatusBadRequest, nil, errors.New("can not find this user"))
+	}
+	AccountParams := model.Users{}
 	c.Bind(&AccountParams)
-	AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")
+	if AccountParams.Password != "" {
+		AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")
+		AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")
 
-	AccountParams.Password = library.HashStringSha256(AccountParams.Password)
+		AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")
+
+		AccountParams.Password = library.HashStringSha256(AccountParams.Password)
+	} else {
+		AccountParams.Password = currentUserInfo.Password
+		AccountParams.CryptPassword = currentUserInfo.CryptPassword
+
+	}
+	AccountParams.Id = currentUserInfo.Id
+	AccountParams.UserType = currentUserInfo.UserType
+	AccountParams.UserName = currentUserInfo.UserName
+	AccountParams.CreatedAt = currentUserInfo.CreatedAt
+	if AccountParams.FirstName == "" {
+		AccountParams.FirstName = currentUserInfo.FirstName
+	}
+	if AccountParams.LastName == "" {
+		AccountParams.LastName = currentUserInfo.LastName
+	}
+	if AccountParams.Email == "" {
+		AccountParams.Email = currentUserInfo.Email
+	}
+	if AccountParams.CustomField == "" {
+		AccountParams.CustomField = currentUserInfo.CustomField
+	}
+
+	// AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")
+
+	// AccountParams.Password = library.HashStringSha256(AccountParams.Password)
 	us, e := uC.usersService.EditUsers(AccountParams)
 	if e != nil {
 		return c.Output(http.StatusBadRequest, "Create account fail", e)
@@ -164,7 +203,6 @@ func (uC *authController) UpdateUsers(c *Context) error {
 }
 
 func (uC *authController) TestJWT(c *Context) error {
-	fmt.Println(c.AuthObject)
 	// var AccountParams model.Users
 	// c.Bind(&AccountParams)
 	// AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")

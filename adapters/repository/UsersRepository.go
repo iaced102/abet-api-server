@@ -3,6 +3,7 @@ package repository
 import (
 	"aBet/model"
 	"aBet/usecase/repository"
+	"fmt"
 
 	_ "github.com/lib/pq"
 )
@@ -31,7 +32,9 @@ func (u *usersRepository) AddUsers(Users model.Users) (model.Users, error) {
 	return Users, err
 }
 func (u *usersRepository) EditUsers(Users model.Users) (model.Users, error) {
+	fmt.Println(Users.CustomField)
 	_, e := u.db.pgdb.Model(&Users).Where("id = ?", Users.Id).Update()
+	fmt.Println(Users.CustomField)
 	return Users, e
 	// bundle
 }

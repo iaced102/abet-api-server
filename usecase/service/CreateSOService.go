@@ -10,6 +10,7 @@ import (
 
 type CreateSOService interface {
 	CreateSO(name string, description string, identifierId string, userId string) (model.SODocument, error)
+	DeleteSO(id string) error
 }
 
 type createSOService struct {
@@ -33,4 +34,8 @@ func (cSS *createSOService) CreateSO(name string, description string, identifier
 	}
 	e := cSS.soRepository.CreateSO(&sODocument)
 	return sODocument, e
+}
+
+func (cSS *createSOService) DeleteSO(id string) error {
+	return cSS.soRepository.DeleteSO(id)
 }

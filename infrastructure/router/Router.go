@@ -90,6 +90,9 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 	group.GET("SO/get-detail-so/:id", func(context echo.Context) error {
 		return forward(context, authObject, c.SOController.GetDetailSODocument)
 	})
+	group.DELETE("SO/delete-SO", func(context echo.Context) error {
+		return forward(context, authObject, c.SOController.DeleteSODocument)
+	})
 
 	group.POST("SO/create-so", func(context echo.Context) error {
 		return forward(context, authObject, c.SOController.CreateNewSODocument)

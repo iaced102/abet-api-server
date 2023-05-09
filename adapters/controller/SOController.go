@@ -17,6 +17,7 @@ type SOController interface {
 	CreateNewSODocument(c *Context) error
 	GetAllSODocument(c *Context) error
 	GetDetailSODocument(c *Context) error
+	DeleteSODocument(c *Context) error
 }
 
 func NewSOController(cSS service.CreateSOService, gASS service.GetAllSODocumentService) SOController {
@@ -55,4 +56,17 @@ func (sOC *sOController) GetDetailSODocument(c *Context) error {
 		return c.Output(http.StatusBadRequest, nil, e)
 	}
 	return c.Output(http.StatusOK, so, e)
+}
+
+func (sOC *sOController) DeleteSODocument(c *Context) error {
+	if c.AuthObject.GetUserRole() != 0 {
+		return c.Output(http.StatusForbidden, "dont have permission", errors.New("you are not admin role"))
+	}
+	so := model.SODocument{}
+	c.Bind(&so)
+	e := sOC.createSOService.DeleteSO(so.Id)
+	if e != nil {
+		return c.Output(http.StatusBadRequest, nil, e)
+	}
+	return c.Output(http.StatusOK, nil, e)
 }

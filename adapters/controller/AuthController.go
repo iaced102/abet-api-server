@@ -248,7 +248,7 @@ func (uC *authController) ResetPassword(c *Context) error {
 	if er != nil {
 		c.Output(http.StatusBadRequest, nil, errors.New("can not resetpassword"))
 	}
-	from := os.Getenv("email")
+	from := os.Getenv("EMAIL")
 	password := os.Getenv("APPLICATION_EMAIL_PASSWORD")
 
 	// Receiver email address.

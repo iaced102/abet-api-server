@@ -5,12 +5,16 @@ import (
 	"aBet/library"
 	"aBet/model"
 	"aBet/usecase/service"
+	"bytes"
 	"crypto/rsa"
 	"errors"
 	"fmt"
 	"net/http"
+	"net/smtp"
+	"os"
 	"strconv"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -35,8 +39,9 @@ type authController struct {
 
 func checkExistUserName(uC *authController, userName string) bool {
 
-	userInfo, _ := uC.usersService.GetUsersByName(userName)
-	if len(userInfo) == 0 {
+	userInfo, e := uC.usersService.GetUsersByName(userName)
+	fmt.Println(userInfo)
+	if e != nil {
 		return false
 	}
 	return true
@@ -161,8 +166,6 @@ func (uC *authController) UpdateUsers(c *Context) error {
 	AccountParams := model.Users{}
 	c.Bind(&AccountParams)
 	if AccountParams.Password != "" {
-		AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")
-		AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")
 
 		AccountParams.CryptPassword = EncryptPass(AccountParams.Password, "crypt/pubkeyv2.pem")
 
@@ -228,6 +231,62 @@ func (uC *authController) GetDetailUsers(c *Context) error {
 	}
 	return c.Output(http.StatusOK, u, err)
 }
+func (uC *authController) ResetPassword(c *Context) error {
+	// userName := c.Param("userName")
+	user := model.Users{}
+	c.Bind(&user)
+	user, e := uC.usersService.GetUsersByName(user.UserName)
+	if e != nil {
+		return c.Output(http.StatusBadRequest, nil, errors.New("can not find user"))
+	}
+	// newUUID, _ := exec.Command("uuidgen").Output()
+	newPassword := uuid.NewString()
+	user.Password = newPassword
+	user.CryptPassword = EncryptPass(user.Password, "crypt/pubkeyv2.pem")
+	user.Password = library.HashStringSha256(user.Password)
+	_, er := uC.usersService.EditUsers(user)
+	if er != nil {
+		c.Output(http.StatusBadRequest, nil, errors.New("can not resetpassword"))
+	}
+	from := os.Getenv("email")
+	password := os.Getenv("APPLICATION_EMAIL_PASSWORD")
+
+	// Receiver email address.
+	to := []string{
+		user.Email,
+	}
+
+	// smtp server configuration.
+	smtpHost := "smtp.gmail.com"
+	smtpPort := "587"
+
+	// Authentication.
+	auth := smtp.PlainAuth("", from, password, smtpHost)
+
+	t, _ := template.ParseFiles("template.html")
+
+	var body bytes.Buffer
+
+	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	body.Write([]byte(fmt.Sprintf("Subject: This is a test subject \n%s\n\n", mimeHeaders)))
+
+	t.Execute(&body, struct {
+		Name        string
+		Newpassword string
+	}{
+		Name:        user.FirstName + " " + user.LastName,
+		Newpassword: newPassword,
+	})
+
+	// Sending email.
+	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, body.Bytes())
+	if err != nil {
+		fmt.Println(err)
+		return c.Output(http.StatusBadRequest, nil, errors.New("can not send email"))
+	}
+	fmt.Println("Email Sent!")
+	return c.Output(http.StatusOK, nil, errors.New("check mail"))
+}
 
 type AuthController interface {
 	LoginUserAccount(c *Context) error
@@ -236,6 +295,7 @@ type AuthController interface {
 	DeleteUsers(c *Context) error
 	GetDetailUsers(c *Context) error
 	TestJWT(c *Context) error
+	ResetPassword(c *Context) error
 }
 
 func NewAuthController(us service.UsersService) AuthController {

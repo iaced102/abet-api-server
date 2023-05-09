@@ -61,6 +61,9 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 	e.DELETE("/users-account/delete", func(context echo.Context) error {
 		return forward(context, authObject, c.AuthController.DeleteUsers)
 	})
+	e.POST("/users-account/reset-password", func(context echo.Context) error {
+		return forward(context, authObject, c.AuthController.ResetPassword)
+	})
 
 	//__________________________________________________
 	group.POST("document/create-report", func(context echo.Context) error {

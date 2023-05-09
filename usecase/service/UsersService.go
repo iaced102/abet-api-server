@@ -12,7 +12,7 @@ type UsersService interface {
 	DeleteUsers(Users model.Users) (model.Users, error)
 	GetByIDUsers(Id string) ([]model.Users, error)
 	LoginUserAccount(userName string, password string) (model.Users, error)
-	GetUsersByName(userName string) ([]model.Users, error)
+	GetUsersByName(userName string) (model.Users, error)
 }
 
 type usersService struct {
@@ -21,7 +21,7 @@ type usersService struct {
 
 // DeleteUserById implements UsersService
 
-func (uS *usersService) GetUsersByName(userName string) ([]model.Users, error) {
+func (uS *usersService) GetUsersByName(userName string) (model.Users, error) {
 	userInfo, e := uS.usersRepository.GetUsersByName(userName)
 	return userInfo, e
 }

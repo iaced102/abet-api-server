@@ -12,3 +12,4 @@ services:
       - customnetwork
 networks:
   customnetwork:
+    driver: bridge

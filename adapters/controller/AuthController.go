@@ -261,6 +261,7 @@ func (uC *authController) ResetPassword(c *Context) error {
 	smtpPort := "587"
 
 	// Authentication.
+	fmt.Println("", from, password, smtpHost)
 	auth := smtp.PlainAuth("", from, password, smtpHost)
 
 	t, _ := template.ParseFiles("template.html")
@@ -279,6 +280,7 @@ func (uC *authController) ResetPassword(c *Context) error {
 	})
 
 	// Sending email.
+	fmt.Println(smtpHost+":"+smtpPort, auth, from, to)
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, body.Bytes())
 	if err != nil {
 		fmt.Println(err)

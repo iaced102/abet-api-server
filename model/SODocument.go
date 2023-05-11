@@ -1,7 +1,7 @@
 package model
 
 type SODocument struct {
-	Id           string   `pg:"id" json:"id"`
+	Id           string   `pg:"id" json:"id" form:"id"`
 	Name         string   `pg:"name" json:"name"`
 	CreatedAt    string   `pg:"created_at" json:"createAt"`
 	CreatedBy    string   `pg:"created_by" json:"createBy"`

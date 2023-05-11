@@ -1,6 +1,8 @@
 package repository
 
-import "aBet/model"
+import (
+	"aBet/model"
+)
 
 type sORepository struct {
 	db *Orm
@@ -35,7 +37,7 @@ func (sR *sORepository) GetDetailSODocument(so *model.SODocument) error {
 }
 
 func (sR *sORepository) DeleteSO(id string) error {
-	so := model.SODocument{}
+	so := model.SODocument{Id: id}
 	_, e := sR.db.pgdb.Model(&so).Where("id = ?", so.Id).Delete()
 	return e
 }

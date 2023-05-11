@@ -64,6 +64,7 @@ func (sOC *sOController) DeleteSODocument(c *Context) error {
 	}
 	so := model.SODocument{}
 	c.Bind(&so)
+	fmt.Println(so.Id)
 	e := sOC.createSOService.DeleteSO(so.Id)
 	if e != nil {
 		return c.Output(http.StatusBadRequest, nil, e)

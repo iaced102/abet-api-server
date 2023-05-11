@@ -29,6 +29,7 @@ type ReportController interface {
 	GetAllDocumentById(c *Context) error
 	SubmitReport(c *Context) error
 	GetAllPIbySOId(c *Context) error
+	DeleteDocument(c *Context) error
 }
 
 type reportByDocumentForm struct {
@@ -47,8 +48,8 @@ var detailReportTemplate = map[string]string{
 	"PI.3.2_PI.3.2a": `{"tp1":""}`,
 	"PI.3.2_PI.3.2b": `{"tp1":""}`,
 	"PI.3.3_0":       `{"tp1":"","tp2":"","tp3":"","tp4":""}`,
-	"PI.3.4_PI.3.2a": `{"tp1":"","tp2":""}`,
-	"PI.3.4_PI.3.2b": `{"tp1":"","tp2":""}`,
+	"PI.3.4_PI.3.4a": `{"tp1":"","tp2":""}`,
+	"PI.3.4_PI.3.4b": `{"tp1":"","tp2":""}`,
 }
 
 func NewReportController(cRS rService.CreateReportService, cDS dservice.CreateDocumentService, cDRS service.CreateDetailReportService, gDS dservice.GetDocumentService, gRS rService.GetReportService, gDRS service.GetDetailReportService, eDRS service.EditDetailReportService) ReportController {
@@ -190,4 +191,18 @@ func (rC *reportController) GetAllPIbySOId(c *Context) error {
 		return c.Output(http.StatusBadRequest, nil, e)
 	}
 	return c.Output(http.StatusOK, doc, nil)
+}
+
+func (rC *reportController) DeleteDocument(c *Context) error {
+	if c.AuthObject.GetUserRole() != 0 {
+		return c.Output(http.StatusForbidden, "dont have permission", errors.New("you are not admin role"))
+	}
+	so := model.SODocument{}
+	c.Bind(&so)
+	fmt.Println(so.Id)
+	e := rC.createReportService.DeleteDocument(so.Id)
+	if e != nil {
+		return c.Output(http.StatusBadRequest, nil, e)
+	}
+	return c.Output(http.StatusOK, nil, e)
 }

@@ -44,7 +44,7 @@ func checkExistUserName(uC *authController, userName string) bool {
 	if e != nil {
 		return false
 	}
-	return true
+	return userInfo.Id != ""
 }
 func convertByteToString(b []byte) string {
 	s := make([]string, len(b))

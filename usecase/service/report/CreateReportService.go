@@ -9,6 +9,7 @@ import (
 
 type CreateReportService interface {
 	CreateReport(documentId string, field string, listStudent []model.Student) (model.Report, error)
+	DeleteDocument(id string) error
 }
 
 type createReportService struct {
@@ -29,4 +30,8 @@ func (cR *createReportService) CreateReport(documentId string, field string, lis
 	}
 	e := cR.reportRepository.CreateReport(&report)
 	return report, e
+}
+
+func (cR *createReportService) DeleteDocument(id string) error {
+	return cR.reportRepository.DeleteDocument(id)
 }

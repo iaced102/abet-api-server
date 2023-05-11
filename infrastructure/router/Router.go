@@ -87,6 +87,9 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 	group.GET("document/get-all-document-by-soId/:id", func(context echo.Context) error {
 		return forward(context, authObject, c.ReportController.GetAllPIbySOId)
 	})
+	group.DELETE("document/delete-document", func(context echo.Context) error {
+		return forward(context, authObject, c.ReportController.DeleteDocument)
+	})
 	group.GET("SO/get-detail-so/:id", func(context echo.Context) error {
 		return forward(context, authObject, c.SOController.GetDetailSODocument)
 	})

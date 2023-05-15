@@ -43,7 +43,7 @@ var documentForm = map[string]([]string){
 	"PI.3.4": []string{"PI.3.4a", "PI.3.4b"},
 }
 var detailReportTemplate = map[string]string{
-	"PI.3.1_PI.3.1a": `{"Thành phần 1":"","Thành phần 2":"","Thành phần 3":"","Thành phần 4":""}`,
+	"PI.3.1_PI.3.1a": `{"Thành phần 1":"","Thành phần 2":"","Thành phần 3":""}`,
 	"PI.3.1_PI.3.1b": `{"Thành phần 1":"","Thành phần 2":""}`,
 	"PI.3.2_PI.3.2a": `{"Thành phần 1":""}`,
 	"PI.3.2_PI.3.2b": `{"Thành phần 1":""}`,

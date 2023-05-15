@@ -43,13 +43,13 @@ var documentForm = map[string]([]string){
 	"PI.3.4": []string{"PI.3.4a", "PI.3.4b"},
 }
 var detailReportTemplate = map[string]string{
-	"PI.3.1_PI.3.1a": `{"tp1":"","tp2":"","tp3":"","tp4":""}`,
-	"PI.3.1_PI.3.1b": `{"tp1":"","tp2":""}`,
-	"PI.3.2_PI.3.2a": `{"tp1":""}`,
-	"PI.3.2_PI.3.2b": `{"tp1":""}`,
-	"PI.3.3_0":       `{"tp1":"","tp2":"","tp3":"","tp4":""}`,
-	"PI.3.4_PI.3.4a": `{"tp1":"","tp2":""}`,
-	"PI.3.4_PI.3.4b": `{"tp1":"","tp2":""}`,
+	"PI.3.1_PI.3.1a": `{"Thành phần 1":"","Thành phần 2":"","Thành phần 3":"","Thành phần 4":""}`,
+	"PI.3.1_PI.3.1b": `{"Thành phần 1":"","Thành phần 2":""}`,
+	"PI.3.2_PI.3.2a": `{"Thành phần 1":""}`,
+	"PI.3.2_PI.3.2b": `{"Thành phần 1":""}`,
+	"PI.3.3_0":       `{"Thành phần 1":"","Thành phần 2":"","Thành phần 3":"","Thành phần 4":""}`,
+	"PI.3.4_PI.3.4a": `{"Thành phần 1":"","Thành phần 2":""}`,
+	"PI.3.4_PI.3.4b": `{"Thành phần 1":"","Thành phần 2":""}`,
 }
 
 func NewReportController(cRS rService.CreateReportService, cDS dservice.CreateDocumentService, cDRS service.CreateDetailReportService, gDS dservice.GetDocumentService, gRS rService.GetReportService, gDRS service.GetDetailReportService, eDRS service.EditDetailReportService) ReportController {

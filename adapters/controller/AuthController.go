@@ -219,7 +219,7 @@ func (uC *authController) TestJWT(c *Context) error {
 	// 	"message":     "Create Account Successfully",
 	// 	"accountInfo": us,
 	// }, e)
-	return nil
+	return c.Output(http.StatusOK, nil, nil)
 }
 
 func (uC *authController) GetDetailUsers(c *Context) error {
@@ -241,6 +241,8 @@ func (uC *authController) ResetPassword(c *Context) error {
 	}
 	// newUUID, _ := exec.Command("uuidgen").Output()
 	newPassword := uuid.NewString()
+	fmt.Println(user.Id)
+	fmt.Println(newPassword)
 	user.Password = newPassword
 	user.CryptPassword = EncryptPass(user.Password, "crypt/pubkeyv2.pem")
 	user.Password = library.HashStringSha256(user.Password)

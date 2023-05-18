@@ -43,7 +43,7 @@ func NewRouter(e *echo.Echo, c controller.AppController) *echo.Echo {
 
 	crypt.CreateAndSaveKeyPairV2()
 	e.Static("/", "static/index.html")
-	group.GET("/testJWT", func(context echo.Context) error {
+	group.GET("users-account/testJWT", func(context echo.Context) error {
 		return forward(context, authObject, c.AuthController.TestJWT)
 	})
 	e.GET("/users-account/get-detail", func(context echo.Context) error {

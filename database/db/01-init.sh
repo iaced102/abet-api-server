@@ -56,6 +56,9 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     class_id varchar(30),
     report_id varchar(80),
     value text,
+    major varchar(80),
+    assessor_id varchar(150),
+    course varchar(50),
     UNIQUE(id)
 	);
   COMMIT;

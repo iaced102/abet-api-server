@@ -1,6 +1,9 @@
 package repository
 
-import "aBet/model"
+import (
+	"aBet/model"
+	"fmt"
+)
 
 type DetailReportRepository interface {
 	CreateDetailReport(dR model.DetailReport) error
@@ -30,6 +33,10 @@ func (dRR *detailReportRepository) GetDetailReport(reportId string) ([]model.Det
 }
 
 func (dRR *detailReportRepository) EditDetailReport(dR model.DetailReport) error {
-	_, e := dRR.db.pgdb.Model(&dR).Where("id = ?", dR.Id).UpdateNotZero()
+
+	_, e := dRR.db.pgdb.Model(&dR).Where("id = ?", dR.Id).Update()
+	fmt.Println(dR.Id, dR.Value)
+	fmt.Println("__________________")
+	fmt.Println(e)
 	return e
 }

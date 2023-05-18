@@ -24,13 +24,16 @@ func NewCreateDetailReportService(rR repository.CreateDetailReportRepository) Cr
 func (cDRS *createDetailReportService) CreateListDetailReport(listStudent []model.Student, reportId string, field string, template string) error {
 	for _, s := range listStudent {
 		detailReport := model.DetailReport{
-			Id:        uuid.NewString(),
-			StudentId: s.StudentId,
-			FirstName: s.FirstName,
-			LastName:  s.LastName,
-			ClassId:   s.ClassId,
-			ReportId:  reportId,
-			Value:     template,
+			Id:         uuid.NewString(),
+			StudentId:  s.StudentId,
+			FirstName:  s.FirstName,
+			LastName:   s.LastName,
+			ClassId:    s.ClassId,
+			ReportId:   reportId,
+			Value:      template,
+			AssessorId: s.AssessorId,
+			Major:      s.Major,
+			Course:     s.Course,
 		}
 		e := cDRS.detailReportRepository.CreateDetailReport(detailReport)
 		if e != nil {

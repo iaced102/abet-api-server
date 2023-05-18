@@ -140,6 +140,7 @@ func (rC *reportController) GetDetailDocument(c *Context) error {
 		return c.Output(http.StatusBadRequest, doc, e)
 	}
 	outgoingGetDetailDocument := outgoing.GetDetailDocument{
+		Name:         doc.Name,
 		Id:           doc.Id,
 		CreatedBy:    doc.CreatedBy,
 		CreatedAt:    doc.CreatedAt,
